@@ -7,7 +7,7 @@ body {
 /* Основные блоки */
 .content {
     margin: 0 auto;
-    width: 70%;
+    width: 80%;
 }
 
 .content .block {  
@@ -80,4 +80,25 @@ body {
 
 .content .img .my-photo {
     width: 100%;
+}
+
+.content .about-me {
+    padding: 20px;    
+}
+
+.content .about-me .text {
+    font-style: italic; 
+    font-size: 16px;   
+    text-align: justify;
+}
+
+.content .about-me img {
+    margin-top: 20px;
+    margin-left: 15px;
+}
+
+.content .about-me .imp {
+    vertical-align: middle;
+    margin-left: 10px;
+    font-weight: bold;
 }
