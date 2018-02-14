@@ -1,0 +1,83 @@
+body {
+    padding: 0;
+    margin: 0;
+    background: url('../img/grid.png') 0 0 repeat;
+}
+
+/* Основные блоки */
+.content {
+    margin: 0 auto;
+    width: 70%;
+}
+
+.content .block {  
+    width: 49%;
+    margin-bottom: 30px;
+}
+
+.content .block-left {
+    float: left;
+}
+
+.content .block-right {
+    float: right;
+}
+
+
+/* Точки */
+.content .separator {
+    clear: both;
+    display: block;
+    height: 8px;
+    width: 100%;
+    margin: 10px 0;
+    border-top: 4px dotted gray;
+    position: relative;
+}
+
+.content .separator .up-button {
+    position: absolute;
+    right: 5px;
+    top: -22px;
+}
+
+
+/* Теги в блоках */
+
+.content .block h1 {
+    margin: 0;
+    padding: 0;
+    font-family: 'IMPACT', 'Verdana', sans-serif;
+    text-transform: uppercase;
+    font-size: 58pt;
+    text-align: left;
+    font-weight: bold;
+}
+
+.content .block h2 {
+    margin: 0;
+    padding: 0;
+    font-family: 'IMPACT', 'Verdana', sans-serif;
+    text-transform: uppercase;
+    font-size: 22pt;
+    font-weight: bold;
+    color: rgb(248, 208, 31);
+}
+
+
+/* Раздел кто я */
+.content .img {
+    display: block;
+    margin: 20px;
+    padding: 10px;
+    background-color: white;
+    border: 2px solid rgb(182, 182, 182);
+    width: 120px;
+    height: 145px;
+    border-radius: 3px;
+    float: left;
+}
+
+.content .img .my-photo {
+    width: 100%;
+}
