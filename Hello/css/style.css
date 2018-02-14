@@ -86,19 +86,68 @@ body {
     padding: 20px;    
 }
 
-.content .about-me .text {
+.content .text {
     font-style: italic; 
     font-size: 16px;   
     text-align: justify;
 }
 
-.content .about-me img {
+.content img.quote {
     margin-top: 20px;
     margin-left: 15px;
 }
 
-.content .about-me .imp {
+.content .imp {
     vertical-align: middle;
     margin-left: 10px;
+    font-weight: bold;
+}
+
+
+/* Раздел достижения */
+
+.content .progress {
+    box-sizing: border-box;
+    margin: 20px;
+    width: 100%;
+    position: relative;
+}
+
+.content .progress progress {  
+    margin: 5px 10px;
+    height: 25px;
+    width: 70%;
+    display: inline-block;
+    vertical-align: middle;
+    background-color: rgb(252, 238, 42);
+    border-radius: 10px;
+}
+
+.content .progress progress::-webkit-progress-bar {
+    background-color: rgb(253, 253, 253);
+    border: 1px solid rgb(177, 174, 0);
+    border-radius: 10px;
+}
+
+.content .progress progress::-webkit-progress-value {
+    background-color: rgb(252, 238, 42);
+    border-radius: 10px;
+}
+
+.content .progress progress::-moz-progress-bar {
+    background-color: rgb(252, 238, 42);
+    border-radius: 10px;
+}
+
+.content .progress .progress-percent {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.content .progress .progress-title {
+    position: absolute;
+    left: 40px;
+    top: 8px;
+    font-style: italic;
     font-weight: bold;
 }
