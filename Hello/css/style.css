@@ -139,7 +139,7 @@ body {
     background: url('../img/progress/back-right.png') 0 0 no-repeat;
 }
 
-.content .progress progress {   
+.content .progress progress {    
     margin: 0;
     height: 25px;
     width: 70%;
