@@ -24,7 +24,8 @@ body {
 }
 
 
-/* Точки */
+/* Разделитель */
+
 .content .separator {
     clear: both;
     display: block;
@@ -37,7 +38,7 @@ body {
 
 .content .separator .up-button {
     position: absolute;
-    right: 5px;
+    right: 15px;
     top: -22px;
 }
 
@@ -66,6 +67,8 @@ body {
 
 
 /* Раздел кто я */
+
+
 .content .img {
     display: block;
     margin: 20px;
@@ -82,14 +85,18 @@ body {
     width: 100%;
 }
 
-.content .about-me {
+.content .description {
     padding: 20px;    
 }
 
 .content .text {
     font-style: italic; 
     font-size: 16px;   
-    text-align: justify;
+    text-align: left;
+}
+
+.content .text p {
+    margin: 5px;
 }
 
 .content img.quote {
@@ -107,47 +114,80 @@ body {
 /* Раздел достижения */
 
 .content .progress {
+    position: relative;
     box-sizing: border-box;
     margin: 20px;
     width: 100%;
-    position: relative;
+    font-size: 0;
 }
 
-.content .progress progress {  
-    margin: 5px 10px;
+.content .progress .left-progress {  
+    margin: 0;
+    height: 25px;
+    width: 14px;
+    display: inline-block;
+    vertical-align: middle;
+    background: url('../img/progress/front-left.png') 0 0 no-repeat;
+}
+
+.content .progress .right-progress {  
+    margin: 0;
+    height: 25px;
+    width: 14px;
+    display: inline-block;
+    vertical-align: middle;
+    background: url('../img/progress/back-right.png') 0 0 no-repeat;
+}
+
+.content .progress progress {   
+    margin: 0;
     height: 25px;
     width: 70%;
     display: inline-block;
     vertical-align: middle;
-    background-color: rgb(252, 238, 42);
-    border-radius: 10px;
+    background: url('../img/progress/back-center.png') 0 0 no-repeat;
 }
 
 .content .progress progress::-webkit-progress-bar {
-    background-color: rgb(253, 253, 253);
-    border: 1px solid rgb(177, 174, 0);
-    border-radius: 10px;
+    background: url('../img/progress/back-center.png') 0 0 repeat-x;
 }
 
 .content .progress progress::-webkit-progress-value {
-    background-color: rgb(252, 238, 42);
-    border-radius: 10px;
-}
-
-.content .progress progress::-moz-progress-bar {
-    background-color: rgb(252, 238, 42);
-    border-radius: 10px;
+    background: url('../img/progress/front-center.png') 0 0 repeat-x;
 }
 
 .content .progress .progress-percent {
+    margin-left: 10px;
+    font-size: 18px;
     display: inline-block;
     vertical-align: middle;
+    font-style: italic;
+    font-weight: bold;
 }
 
 .content .progress .progress-title {
+    font-size: 14px;
     position: absolute;
-    left: 40px;
-    top: 8px;
+    left: 30px;
+    top: 5px;
     font-style: italic;
     font-weight: bold;
+}
+
+/* Описание  услуг*/
+
+.content .img-services {
+    float: left;
+    margin-right: 20px;
+}
+
+/* Раздел награды */
+
+.content .award {
+    display: inline-block;
+    width: 30%;
+    min-height: 120px;
+    background: rgb(248, 208, 31) url('../img/flag.png') 90% 0 no-repeat;
+    margin-right: 4px;
+    border-radius: 5px 0 10px 0;
 }

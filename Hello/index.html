@@ -16,21 +16,16 @@
             <h1>Кто я?</h1>
             <h2>Коротко о том, кто же я</h2>
             <div class="img"><img class="my-photo" src="img/photo.png" alt="Мое фото"></div>
-            <div class="about-me">
+            <div class="description">
                 <div class="text">
-                    Я работаю в одной из самых крупных IT-компаний. А началось все с детства, когда меня отдали
-                    в школу, в которой я первый раз встретился с программированием. Там меня пытались 
-                    научить паскалю, а затем мы перешли к верствке сайтов.
-                </div>     
-                <div class="text">
-                Мне понравилось это направление и
+                    <p>Я работаю в одной из самых крупных IT-компаний. А началось все с детства, когда меня отдали
+                    в школу, в которой я первый раз встретился с программированием.</p>
+                
+                    <p>Мне понравилось это направление и
                     после школы я уже знал, куда мне идти и в какой трасли развиваться. Я выбрал ВУЗ, в котором
-                    дают лучшие знания в области IT-технлогий, где я с отличием закончил его.
+                    дают лучшие знания в области IT-технлогий, где я с отличием закончил его.</p>
                 </div>
-                <div class="text">
-                    Сейчас в нашу фирму приходят люди, такие же как я, те, кто хотят изменить мир к лучшему.
-                </div>
-                <img src="img/pointer.png" class="quote"><span class="text imp">Чтобы что-то изменить, пытайся что-то изменить.</span>
+                <img src="img/pointer.png" class="quote"><span class="text imp">Не бойся начинать, дерзай</span>
             </div>
             
         </div>
@@ -43,60 +38,87 @@
 
             <!-- HTML -->
             <div class="progress">
-                <progress value="88" max="100"></progress>
+                <div class="left-progress"></div>
+                    <progress value="88" max="100"></progress>
+                <div class="right-progress"></div>
+                
                 <!-- Проценты и название -->
-                <div class="progress-percent">88%</div>
+                <div class="progress-percent"></div>
                 <div class="progress-title">HTML</div>               
             </div>
         
 
             <!-- JavaScript -->
             <div class="progress">
-                <progress value="67" max="100"></progress>
+                <div class="left-progress"></div>
+                    <progress value="67" max="100"></progress>
+                <div class="right-progress"></div>
                     <!-- Проценты и название -->
-                <div class="progress-percent">67%</div>
+                <div class="progress-percent"></div>
                 <div class="progress-title">JavaScript</div>               
             </div>
 
             <!-- CSS -->
             <div class="progress">
-                <progress value="71" max="100"></progress>
+                <div class="left-progress"></div>
+                    <progress value="71" max="100"></progress>
+                <div class="right-progress"></div>
                     <!-- Проценты и название -->
-                <div class="progress-percent">71%</div>
+                <div class="progress-percent"></div>
                 <div class="progress-title">CSS</div>               
             </div>
 
             <!-- C# -->
             <div class="progress">
-                <progress value="70" max="100"></progress>
+                <div class="left-progress"></div>
+                    <progress value="24" max="100"></progress>
+                <div class="right-progress"></div>
                 <!-- Проценты и название -->
-                <div class="progress-percent">55%</div>
+                <div class="progress-percent"></div>
                 <div class="progress-title">C#</div>               
             </div>
 
-            <img src="img/pointer.png" class="quote"><span class="text imp">Чтобы чего-то добиться, не достаточно просто мечтать.</span>
-           
         </div>
-
+        <script async src="scripts/progress.js"></script>
 
 
         <!-- Разделитель блоков -->
-        <div class="separator"><img class="up-button" src="img/up.png" alt="Вверх"></div>
+        <div class="separator"><a href="#"><img class="up-button" src="img/up.png" alt="Вверх"></a></div>
 
         <!-- Третий блок "Услуги" -->
         <div class="block block-left">
             <h1>Услуги</h1>
             <h2>Что я могу вам предложить</h2>
+            <img src="img/services.png" alt="Описание" class="img-services">
+            <div class="description">
+                <div class="text">
+                    <p>Зарождение идеи начинается с мысли. Наша задача - научить правильно мыслить</p>
+                    <p>Мы стремимся задать правильное направление и вместе с вами построить будущее таким, 
+                        которое мы вместе запланирем.</p>
+                    <p>Для достижения этой цели я предлагаю посетить наш онлайн-семинар, в котором будут 
+                        рассмотрены все тонкости нашего разума </p>
+                </div>    
+            </div>
         </div>
 
         <!-- Четвертый блок "Награды" -->
         <div class="block block-right">
             <h1>Награды</h1>
             <h2>Награды - показатель качества</h2>
+            <div class="description">
+                <div class="text">
+                    <p>Самое страшное - это довериться неизвестному человеку, особенно, если о нем ничего не известно.</p>
+                    <p>Наша же компания обладает наградами, которые говорят сами за себя:</p>
+                </div>
+                <div class="award"></div>
+                <div class="award"></div>
+                <div class="award"></div>
+            </div>
+
         </div>
 
         <!-- Разделитель блоков -->
-        <div class="separator"><img class="up-button" src="img/up.png" alt="Вверх"></div>
+        <div class="separator"><a href="#"><img class="up-button" src="img/up.png" alt="Вверх"></a></div>
 
 
     </div>  
