@@ -11,6 +11,6 @@ for(var i = 0; i < list.length; i++)
     // добавляем разделитель
     var pos = document.createElement('img');
     pos.src = 'img/pos.png';    
-    pos.style = 'position: absolute; left:' + (percent * 0.7 + 2) + '%; top:-5px;';
-    list[i].appendChild(pos);
+    pos.style = 'position: absolute; left:' + percent + '%; top:-5px;';
+    list[i].getElementsByClassName('progressbar')[0].appendChild(pos);
 }
