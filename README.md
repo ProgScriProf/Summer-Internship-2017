@@ -14,4 +14,4 @@
 - [x] Редактировать README файл
 - [x] Создать первый проект
 - [x] Снова отредактировать README файл
-- [ ] Создать страницу в первом проекте [по образцу](http://www.webdesigndev.com/wp-content/uploads/2012/10/47.jpg)
+- [x] Создать страницу в первом проекте [по образцу](http://www.webdesigndev.com/wp-content/uploads/2012/10/47.jpg)
