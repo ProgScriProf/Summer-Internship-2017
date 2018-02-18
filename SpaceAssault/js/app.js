@@ -43,6 +43,8 @@ resources.onReady(init);
 function init() {
     terrainPattern = ctx.createPattern(resources.get('img/terrain.png'), 'repeat');
 
+    loadLevel(1);
+
     // Событие для кнопки повтора
     document.getElementById('play-again').addEventListener('click', function() {
         reset();
@@ -54,6 +56,28 @@ function init() {
 }
 
 
+// Загрузка уровня
+function loadLevel(lvl)
+{
+    switch (lvl)
+    {
+        case 1: 
+            megaliths = [
+            {
+                pos: [0.4 * canvas.width , 0.1 * canvas.height],
+                sprite: new Sprite('img/sprites.png', [0,210], [60,60], 0, [0])
+            }, 
+            {
+                pos: [0.7 * canvas.width , 0.4 * canvas.height],
+                sprite: new Sprite('img/sprites.png', [0,270], [60,60], 0, [0])
+            }, 
+            {
+                pos: [0.5 * canvas.width , 0.75 * canvas.height],
+                sprite: new Sprite('img/sprites.png', [0,210], [60,60], 0, [0])
+            }]
+    }
+}
+
 
 // Состояние игры
 var player = {
@@ -64,6 +88,7 @@ var player = {
 var bullets = [];
 var enemies = [];
 var explosions = [];
+var megaliths; // Мегалиты
 
 var lastFire = Date.now();
 var gameTime = 0;
@@ -79,6 +104,8 @@ var playerSpeed = 200;
 var bulletSpeed = 500;
 var enemySpeed = 100;
 
+var walking_distance = 50;
+
 
 // Обновление
 function update(dt) {
@@ -87,13 +114,13 @@ function update(dt) {
     handleInput(dt);
     updateEntities(dt);
 
-    // Случайное ремя появления. Уменьшается с ростом времени
+    // Случайное время появления. Уменьшается с ростом времени
     if(Math.random() < 1 - Math.pow(.993, gameTime)) {
         enemies.push({
-            pos: [canvas.width,
-                  Math.random() * (canvas.height - 39)],
+            pos: [canvas.width, Math.random() * (canvas.height - 39)],
+            dY: 0,
             sprite: new Sprite('img/sprites.png', [0, 78], [80, 39],
-                               6, [0, 1, 2, 3, 2, 1])
+                               6, [0, 1, 2, 3, 2, 1])                          
         });
     }
 
@@ -102,23 +129,39 @@ function update(dt) {
     scoreEl.innerHTML = score;
 };
 
+function isPlayerCollision(x, y) {
+    // Новые координаты
+    var pos = [player.pos[0] + x, player.pos[1] + y];
+
+     // Бежим по всем мегалитам
+    for (var i = 0; i < megaliths.length; i++)
+    {   
+        if(boxCollides(pos, player.sprite.size, megaliths[i].pos, megaliths[i].sprite.size)) 
+            return true;
+    }
+    return false;
+}
 
 // Обработка нажатий клавиш
 function handleInput(dt) {
     if(input.isDown('DOWN') || input.isDown('s')) {
-        player.pos[1] += playerSpeed * dt;
+        if (!isPlayerCollision(0, playerSpeed * dt))
+            player.pos[1] += playerSpeed * dt;
     }
 
     if(input.isDown('UP') || input.isDown('w')) {
-        player.pos[1] -= playerSpeed * dt;
+        if (!isPlayerCollision(0, -playerSpeed * dt))
+            player.pos[1] -= playerSpeed * dt;
     }
 
     if(input.isDown('LEFT') || input.isDown('a')) {
-        player.pos[0] -= playerSpeed * dt;
+        if (!isPlayerCollision(-playerSpeed * dt, 0))
+            player.pos[0] -= playerSpeed * dt;
     }
 
     if(input.isDown('RIGHT') || input.isDown('d')) {
-        player.pos[0] += playerSpeed * dt;
+        if (!isPlayerCollision(playerSpeed * dt, 0))
+            player.pos[0] += playerSpeed * dt;
     }
 
     if(input.isDown('SPACE') &&
@@ -142,14 +185,13 @@ function handleInput(dt) {
     }
 }
 
-
 // Обновление сущностей
 function updateEntities(dt) {
     
     // Обновление игрока
     player.sprite.update(dt);
 
-    // UОбновление пуль
+    // Обновление пуль
     for(var i=0; i<bullets.length; i++) {
         var bullet = bullets[i];
 
@@ -172,7 +214,86 @@ function updateEntities(dt) {
     // Обновление врагов
     for(var i=0; i<enemies.length; i++) {
         // Передвигаем влево
-        enemies[i].pos[0] -= enemySpeed * dt;
+        var dx = enemySpeed * dt;
+        var dy = 0;
+
+        var pos = enemies[i].pos;
+        var size = enemies[i].sprite.size;
+
+        // Облетаем мегалиты
+
+        // Облетаем мегалиты
+        for(var j=0; j<megaliths.length; j++) 
+        {
+            var pos2 = megaliths[j].pos;
+            var size2 = megaliths[j].sprite.size;
+            
+            // Добавляем запас расстояния для облета
+            var size2_space = [size2[0] + walking_distance, size2[1]];
+
+            // Проверяем столкновение
+            if (boxCollides(pos, size, pos2, size2_space)) {
+                // Впереди препятствие! Нужно облететь
+                // Вычисляем направление облета
+
+                // Облет выполняем по гипотенузе, где два катета - расстояния по х и у (подобные треугольники)
+
+                /*
+                                               _________
+                                              |
+                _________                     |
+                         |'-._                |
+                         |     '-._           | enemy
+                         |y       | '-._      |
+                megalit  |      dy|  dx  '-._ | 
+                         |--------'-----------'----------
+                         |        x
+                _________|
+                
+               //  */
+
+                // Облетаем вверх
+                var y = (pos[1] < pos2[1] || enemies[i].dY > 0) ?
+                        -(pos[1] + size[1] - pos2[1]):
+                        (pos2[1] + size2[1] - pos[1]);   
+
+                var x = pos[0] - (pos2[0] + size2[0]);  
+                dy = y / x * dx;     
+                
+            }
+
+        }
+
+        if (dy == 0 && Math.abs(enemies[i].dY) > 1) // Если не сталкнулись с мегалитами, пытаемся возвратиться, если уже пора
+        {
+            
+            var isReturn = true;
+            for(var j=0; j<megaliths.length; j++) 
+            {
+                var pos2 = megaliths[j].pos;
+                var size2 = megaliths[j].sprite.size;
+                
+                var r = 5; // радиус облета
+
+                // Добавляем запас расстояния
+                var pos2_space = [pos2[0], pos2[1] - r];
+                var size2_space = [size2[0], size2[1] + 2*r];
+
+                // Если не пересекает, возвращаемся
+                if (boxCollides(pos, size, pos2_space, size2_space)) {
+                    isReturn = false;
+                }
+            }
+
+            if (isReturn)
+                dy = enemies[i].dY / 10;
+        }
+
+        enemies[i].pos[0] -= dx;     
+        enemies[i].pos[1] += dy;  
+        enemies[i].dY -= dy;  
+
+
         enemies[i].sprite.update(dt);
 
         // Если совсем вышли за экран, то удаляем
@@ -193,7 +314,6 @@ function updateEntities(dt) {
         }
     }
 }
-
 
 
 // Столкновения
@@ -228,7 +348,7 @@ function checkCollisions() {
             var size2 = bullets[j].sprite.size;
             
 
-            // Смотрим столкновение каждой пли с каждым врагом
+            // Смотрим столкновение каждой пули с каждым врагом
             if(boxCollides(pos, size, pos2, size2)) {
                 
                 // Если есть столкновение - удаляем врага
@@ -260,7 +380,34 @@ function checkCollisions() {
         if(boxCollides(pos, size, player.pos, player.sprite.size)) {
             gameOver();
         }
+
+
     }
+
+    // Обработка столкновения с мегалитами
+    for(var i=0; i<megaliths.length; i++) 
+    {
+        var pos = megaliths[i].pos;
+        var size = megaliths[i].sprite.size;
+
+        // По всем пулям
+        for(var j=0; j<bullets.length; j++) 
+        {
+            var pos2 = bullets[j].pos;
+            var size2 = bullets[j].sprite.size;
+
+            // Если текущая пуля столкнулась с мегалитом
+            if(boxCollides(pos, size, pos2, size2)) 
+            {
+                // Удаляем данную пулю
+                bullets.splice(j, 1);
+                j--;
+            }
+        }
+
+
+    }
+
 }
 
 function checkPlayerBounds() {
@@ -282,7 +429,6 @@ function checkPlayerBounds() {
     }
 }
 
-
 // рендер
 function render() {
     // Заливка фона
@@ -298,6 +444,7 @@ function render() {
     renderEntities(bullets);
     renderEntities(enemies);
     renderEntities(explosions);
+    renderEntities(megaliths);
 };
 
 // Это для массивов, чтобы отрисовать каждый по отдельности
