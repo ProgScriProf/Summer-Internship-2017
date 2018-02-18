@@ -87,8 +87,7 @@ function update(dt) {
     handleInput(dt);
     updateEntities(dt);
 
-    // It gets harder over time by adding enemies using this
-    // equation: 1-.993^gameTime
+    // Случайное ремя появления. Уменьшается с ростом времени
     if(Math.random() < 1 - Math.pow(.993, gameTime)) {
         enemies.push({
             pos: [canvas.width,
