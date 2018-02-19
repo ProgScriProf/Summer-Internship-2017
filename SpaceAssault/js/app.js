@@ -519,6 +519,7 @@ function renderEntity(entity) {
 function gameOver() {
     document.getElementById('game-over').style.display = 'block';
     document.getElementById('game-over-overlay').style.display = 'block';
+    document.getElementById('play-again').focus();
     isGameOver = true;
     document.getElementsByClassName('score')[0].innerHTML = score;
     document.getElementsByClassName('manna')[0].innerHTML = mannaCount;
