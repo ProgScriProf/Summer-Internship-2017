@@ -130,14 +130,14 @@ function update(dt) {
 
     
     // Случайное время появления маны
-    if (manna.length < maxManna && Math.random() > 0.98)
+    if (manna.length < maxManna && Math.random() > 0.99)
     {
         var _pos = [Math.random() * (canvas.width - 60), Math.random() * (canvas.height - 60)];
 
         var create = true;
         // Чтобы на мегалитах не спавнилась
         for(var i=0; i<megaliths.length && create; i++)
-            if (boxCollides(megaliths[i].pos, megaliths[i].sprite.size, _pos, 60))
+            if (boxCollides(megaliths[i].pos, megaliths[i].sprite.size, _pos, [60, 60]))
                 create = false;
 
         if (create)
