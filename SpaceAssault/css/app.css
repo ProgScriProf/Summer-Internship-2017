@@ -26,10 +26,21 @@ canvas {
     color: #757575;
 }
 
-#score {
+.scores {
     float: right;
     color: white;
-    font-size: 2em;
+    font-size: 1.3em;
+}
+
+.scores .value,
+.scores img {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+.scores .score-item {
+    text-align: right;
 }
 
 .key {
@@ -58,6 +69,7 @@ canvas {
     height: 200px;
     text-align: center;
     color: white;
+    margin-top: 12%;
 }
 
 #game-over h1 {
@@ -65,6 +77,15 @@ canvas {
     font-family: sans-serif;
 }
 
+#game-over h2 {
+    font-family: sans-serif;
+}
+
 #game-over button {
     font-size: 1.5em;
+}
+
+button {
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(165, 165, 165, 0.534);
 }

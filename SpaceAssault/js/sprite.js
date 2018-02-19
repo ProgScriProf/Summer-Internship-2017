@@ -1,7 +1,7 @@
 // Класс управления анимациями
 
 (function() {
-    function Sprite(url, pos, size, speed, frames, dir, once) {
+    function Sprite(url, pos, size, speed, frames, dir, once, radiusScale, speedScale) {
         this.pos = pos;
         this.size = size;
         this.speed = typeof speed === 'number' ? speed : 0;
@@ -10,11 +10,19 @@
         this.url = url;
         this.dir = dir || 'horizontal';
         this.once = once;
+        this.radiusScale = +radiusScale;
+        this.speedScale = +speedScale;
+        this.scale = 1;
     };
 
     Sprite.prototype = {
-        update: function(dt) {
+        update: function(dt, time) {
+            
             this._index += this.speed*dt;
+            // Изменяем масштаб
+            if (this.radiusScale > 0)
+                this.scale = 1 + this.radiusScale * Math.sin(time * this.speedScale);
+
         },
 
         render: function(ctx) {
@@ -48,12 +56,15 @@
                 x += frame * this.size[0];
             }
 
+
             // отрисовываем
             ctx.drawImage(resources.get(this.url),
                           x, y,
                           this.size[0], this.size[1],
-                          0, 0,
-                          this.size[0], this.size[1]);
+                          this.size[0] * (1 - this.scale) / 2, this.size[1] * (1 - this.scale) / 2,
+                          this.size[0] * this.scale, this.size[1] * this.scale);
+
+            
         }
     };
 

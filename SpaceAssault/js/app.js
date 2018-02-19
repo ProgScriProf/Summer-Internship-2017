@@ -89,6 +89,7 @@ var bullets = [];
 var enemies = [];
 var explosions = [];
 var megaliths; // Мегалиты
+var manna = []; // Манна
 
 var lastFire = Date.now();
 var gameTime = 0;
@@ -97,15 +98,18 @@ var terrainPattern;
 
 // Счет
 var score = 0;
-var scoreEl = document.getElementById('score');
+var scoreEl = document.getElementsByClassName('score')[1];
+var mannaCount = 0;
+var mannaEl = document.getElementsByClassName('manna')[1];
 
 // скорости
 var playerSpeed = 200;
 var bulletSpeed = 500;
 var enemySpeed = 100;
 
+// другие константы
 var walking_distance = 50;
-
+var maxManna = 10;
 
 // Обновление
 function update(dt) {
@@ -124,9 +128,31 @@ function update(dt) {
         });
     }
 
-    checkCollisions();
+    
+    // Случайное время появления маны
+    if (manna.length < maxManna && Math.random() > 0.98)
+    {
+        var _pos = [Math.random() * (canvas.width - 60), Math.random() * (canvas.height - 60)];
+
+        var create = true;
+        // Чтобы на мегалитах не спавнилась
+        for(var i=0; i<megaliths.length && create; i++)
+            if (boxCollides(megaliths[i].pos, megaliths[i].sprite.size, _pos, 60))
+                create = false;
+
+        if (create)
+            manna.push({
+                pos: _pos,
+                sprite: new Sprite('img/sprites.png', [0, 154], [60, 60],
+                                    0, [0, 1, 2, 3], null, true, 0.08, 10)
+            });
+    } 
+
+    if (!isGameOver)
+        checkCollisions();
 
     scoreEl.innerHTML = score;
+    mannaEl.innerHTML = mannaCount;
 };
 
 function isPlayerCollision(x, y) {
@@ -313,8 +339,20 @@ function updateEntities(dt) {
             i--;
         }
     }
-}
 
+    // Обновляе манну
+    for(var i=0; i<manna.length; i++) {
+        manna[i].sprite.update(dt, gameTime);
+    
+        // Если закончили анимацию, то удаляем
+        if(manna[i].sprite.done) {
+            mannaCount++;
+            manna.splice(i, 1);
+            i--;
+        }
+        
+    }
+}
 
 // Столкновения
 // Кординаты левого верхнего и правого нижнего углов 
@@ -334,6 +372,7 @@ function boxCollides(pos, size, pos2, size2) {
 
 // Обработка столкновений
 function checkCollisions() {
+
     // Пределы, за которые низя выйти игроку
     checkPlayerBounds();
 
@@ -408,6 +447,18 @@ function checkCollisions() {
 
     }
 
+    // Обработка взятие манны
+    for(var i=0; i<manna.length; i++)
+    {
+        var pos = manna[i].pos;
+        var size = manna[i].sprite.size;
+
+        // Если берем манну
+        if (boxCollides(pos, size, player.pos, player.sprite.size))
+        {
+            manna[i].sprite.speed = 8;
+        }
+    }
 }
 
 function checkPlayerBounds() {
@@ -441,10 +492,11 @@ function render() {
         renderEntity(player);
     }
 
+    renderEntities(manna);
     renderEntities(bullets);
     renderEntities(enemies);
     renderEntities(explosions);
-    renderEntities(megaliths);
+    renderEntities(megaliths);   
 };
 
 // Это для массивов, чтобы отрисовать каждый по отдельности
@@ -468,6 +520,8 @@ function gameOver() {
     document.getElementById('game-over').style.display = 'block';
     document.getElementById('game-over-overlay').style.display = 'block';
     isGameOver = true;
+    document.getElementsByClassName('score')[0].innerHTML = score;
+    document.getElementsByClassName('manna')[0].innerHTML = mannaCount;
 }
 
 // Рестарт
@@ -477,9 +531,13 @@ function reset() {
     isGameOver = false;
     gameTime = 0;
     score = 0;
+    mannaCount = 0;
 
     enemies = [];
     bullets = [];
+    megaliths = [];
+    manna = [];
 
     player.pos = [50, canvas.height / 2];
+    loadLevel(1);
 };
