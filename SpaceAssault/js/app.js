@@ -98,9 +98,9 @@ var terrainPattern;
 
 // Счет
 var score = 0;
-var scoreEl = document.getElementsByClassName('score')[1];
+var scoreEl = document.getElementsByClassName('value score')[0];
 var mannaCount = 0;
-var mannaEl = document.getElementsByClassName('manna')[1];
+var mannaEl = document.getElementsByClassName('value manna')[0];
 
 // скорости
 var playerSpeed = 200;
