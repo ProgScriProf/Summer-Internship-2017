@@ -1,0 +1,7 @@
+C:\Users\Антон\Desktop\Tanks\View\obj\Debug\View.MainForm.resources
+C:\Users\Антон\Desktop\Tanks\View\obj\Debug\View.csproj.GenerateResource.Cache
+C:\Users\Антон\Desktop\Tanks\View\obj\Debug\View.csproj.CoreCompileInputs.cache
+C:\Users\Антон\Desktop\Tanks\View\bin\Debug\View.dll
+C:\Users\Антон\Desktop\Tanks\View\bin\Debug\View.pdb
+C:\Users\Антон\Desktop\Tanks\View\obj\Debug\View.dll
+C:\Users\Антон\Desktop\Tanks\View\obj\Debug\View.pdb
