@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Controller;
+using Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,10 +17,17 @@ namespace Tanks
         [STAThread]
         static void Main()
         {
+            // Форма игры - вьюха
+            MainForm form = new MainForm(); // IViewController
 
-            MainForm form = new MainForm();
-            form.ShowDialog();
+            // Объекты игры (в List) - модель
+            IGameObjects objects = new ListGameObjects();
             
+            // Контроллер
+            IGameController gameController = new GameController(form, objects);
+
+            form.SetController(gameController);
+            form.ShowDialog();
         }
     }
 }

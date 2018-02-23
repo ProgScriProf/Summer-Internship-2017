@@ -5,3 +5,15 @@ C:\Users\Антон\Desktop\Tanks\View\bin\Debug\View.dll
 C:\Users\Антон\Desktop\Tanks\View\bin\Debug\View.pdb
 C:\Users\Антон\Desktop\Tanks\View\obj\Debug\View.dll
 C:\Users\Антон\Desktop\Tanks\View\obj\Debug\View.pdb
+C:\Git\Summer-Internship-2017\Tanks\View\bin\Debug\View.dll
+C:\Git\Summer-Internship-2017\Tanks\View\bin\Debug\View.pdb
+C:\Git\Summer-Internship-2017\Tanks\View\bin\Debug\Controller.dll
+C:\Git\Summer-Internship-2017\Tanks\View\bin\Debug\Controller.pdb
+C:\Git\Summer-Internship-2017\Tanks\View\obj\Debug\View.csprojResolveAssemblyReference.cache
+C:\Git\Summer-Internship-2017\Tanks\View\obj\Debug\View.MainForm.resources
+C:\Git\Summer-Internship-2017\Tanks\View\obj\Debug\View.csproj.GenerateResource.Cache
+C:\Git\Summer-Internship-2017\Tanks\View\obj\Debug\View.csproj.CoreCompileInputs.cache
+C:\Git\Summer-Internship-2017\Tanks\View\obj\Debug\View.dll
+C:\Git\Summer-Internship-2017\Tanks\View\obj\Debug\View.pdb
+C:\Git\Summer-Internship-2017\Tanks\View\bin\Debug\Model.dll
+C:\Git\Summer-Internship-2017\Tanks\View\bin\Debug\Model.pdb

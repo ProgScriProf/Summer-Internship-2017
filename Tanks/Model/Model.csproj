@@ -40,7 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IGameObjects.cs" />
+    <Compile Include="GameObjects\Kolobok.cs" />
+    <Compile Include="GameObjects\MobileObject.cs" />
+    <Compile Include="ListGameObjects.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="GameObjects\Tank.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

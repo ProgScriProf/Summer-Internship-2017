@@ -70,6 +70,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Controller\Controller.csproj">
+      <Project>{719a4258-6979-4558-91d6-91cddbd517ed}</Project>
+      <Name>Controller</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{64fcaaa7-01cd-444b-a0fa-6f9756d936ea}</Project>
+      <Name>Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\View\View.csproj">
       <Project>{278b3bad-7bd0-4fee-8e47-bfa3f246c960}</Project>
       <Name>View</Name>
