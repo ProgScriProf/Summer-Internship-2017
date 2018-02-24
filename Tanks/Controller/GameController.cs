@@ -100,7 +100,7 @@ namespace Controller
                     onTheWay = false;
                 }
 
-                if (tank.Direction != lastDir) // Сменили путь - добавляем паузу, чтобы сразу не стрелял
+                if (tank.Direction != lastDir && tank.Reload < 0.1f) // Сменили путь - добавляем паузу, чтобы сразу не стрелял
                 {
                     tank.Reload = 0.5f;
                 }
