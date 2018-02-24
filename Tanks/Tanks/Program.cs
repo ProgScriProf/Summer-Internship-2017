@@ -28,7 +28,11 @@ namespace Tanks
 
             form.SetController(gameController);
             gameController.NewGame();
-            form.ShowDialog();
+
+            Application.Run(form);
+
+          //  form.ShowDialog();
+            
         }
     }
 }

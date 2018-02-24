@@ -4,3 +4,5 @@ C:\Git\Summer-Internship-2017\Tanks\Model\obj\Debug\Model.csprojResolveAssemblyR
 C:\Git\Summer-Internship-2017\Tanks\Model\obj\Debug\Model.csproj.CoreCompileInputs.cache
 C:\Git\Summer-Internship-2017\Tanks\Model\obj\Debug\Model.dll
 C:\Git\Summer-Internship-2017\Tanks\Model\obj\Debug\Model.pdb
+C:\Git\Summer-Internship-2017\Tanks\Model\obj\Debug\Model.LogForm.resources
+C:\Git\Summer-Internship-2017\Tanks\Model\obj\Debug\Model.csproj.GenerateResource.Cache

@@ -46,12 +46,13 @@ namespace Controller
 
             // С шансом 1/200 поворачиваем танк
             RotateTank(0.5f);
-
-            // Смотрим, если перед танком игрок - стреляем
-            ShootTanks();
+  
             
             // Проверяем столкновения и сдвигаем объекты
             Collision(dt);
+
+            // Смотрим, если перед танком игрок - стреляем
+            ShootTanks();
 
             // Если закнчился взрыв, удаляем его
             _objects.Bangs.Where(bang => bang.OnFinish()).ToList()
@@ -134,6 +135,7 @@ namespace Controller
                 // Если он на свободном месте генерируется
                 if (_objects.Walls.Find(wall => ObjectCollision(wall, tank)) == null &&
                     ObjectCollision(_objects.Player, tank) == false &&
+                    _objects.Water.Find(water => ObjectCollision(water, tank)) == null &&
                     _objects.Tanks.Find(tnk => tnk != tank ? ObjectCollision(tnk, tank) : false) == null)
                 {
                     _objects.Tanks.Add(tank);
@@ -152,6 +154,7 @@ namespace Controller
 
                 // Если он на свободном месте генерируется
                 if (_objects.Walls.Find(wall => ObjectCollision(wall, apple)) == null &&
+                    _objects.Water.Find(water => ObjectCollision(water, apple)) == null &&
                     ObjectCollision(_objects.Player, apple) == false)
                 {
                     _objects.Apples.Add(apple);
@@ -193,7 +196,9 @@ namespace Controller
             // Смотрим, чтобы не вышел за карту и проверяем,
             // чтобы не было столкновений с объектами "стена"
             // А еще проверяем, чтобы с танками не встречался
-            if (ObjectInScreen(player) && _objects.Walls.Find(wall => ObjectCollision(wall, player)) == null)
+            if (ObjectInScreen(player) && 
+                _objects.Walls.Find(wall => ObjectCollision(wall, player)) == null &&
+                _objects.Water.Find(water => ObjectCollision(water, player)) == null)
             {
                 bool isFree = true;
 
@@ -219,6 +224,7 @@ namespace Controller
                 if (!ObjectInScreen(t) ||
                     _objects.Walls.Find(wall => ObjectCollision(wall, t)) != null ||
                     _objects.Tanks.Find(tnk => tnk != t ? ObjectCollision(tnk, t) : false) != null ||
+                    _objects.Water.Find(water => ObjectCollision(water, t)) != null ||
                     ObjectCollision(t, player))
                 {
                     // СТОЛКНОВЕНИЕ СО СТЕНОЙ ИЛИ ДРУГИМ ВРАГОМ
@@ -310,6 +316,9 @@ namespace Controller
             // Рисуем преграды
             _objects.Walls.ForEach(wall => wall.Draw(g));
 
+            // Рисуем воду
+            _objects.Water.ForEach(water => water.Draw(g));
+
             // Рисуем пули
             _objects.Bullets.ForEach(bullet => bullet.Draw(g));
 
@@ -322,6 +331,9 @@ namespace Controller
             // Рисуем взрывы
             _objects.Bangs.ForEach(bang => bang.Draw(g, dt));
 
+            // Рисуем подсказки
+            g.DrawString("Press P for show LOG\nPress R for Restart", new Font(FontFamily.GenericSansSerif, 14),
+                                new SolidBrush(Color.White), new PointF(5, 500));
 
             if (isGame)
             {
@@ -350,8 +362,6 @@ namespace Controller
                                     new SolidBrush(Color.LightGray), new PointF(240, 310));
                 }
             }
-
-            
 
             pb.Image = bm;
         }
@@ -424,6 +434,23 @@ namespace Controller
                 case Keys.Space:
                     CreateBullet(_objects.Player);
                     break;
+                case Keys.R:
+                    StartGame();
+                    break;
+                case Keys.P:
+                    // Ставим на паузу
+                    _view.ActiveTimer = false;
+                    timer.Stop();
+
+                    // Запускаем форму лога
+                    LogForm form = new LogForm();
+                    ShowInfo(form);
+                    form.ShowDialog();
+                    // продолжаем игру
+
+                    timer.Start();
+                    _view.ActiveTimer = true;
+                    break;
             }
         }
 
@@ -446,6 +473,7 @@ namespace Controller
             {
                 // Загружаем уровень
                 _objects.Walls = new List<WallView>();
+                _objects.Water = new List<WaterView>();
 
                 using (StreamReader sr = File.OpenText(path))
                 {
@@ -469,6 +497,9 @@ namespace Controller
                                 case '=': // непробиваемая стена
                                     _objects.Walls.Add(new WallView(BlockSize * x, BlockSize * y, BlockSize, BlockSize, false));
                                     break;
+                                case '0': // вода
+                                    _objects.Water.Add(new WaterView(BlockSize * x, BlockSize * y, BlockSize, BlockSize, rnd.Next(3)));
+                                    break;
                             }
                         }
 
@@ -487,6 +518,31 @@ namespace Controller
         public void Timer()
         {
             MainLoop();
+        }
+
+        // LOG
+
+        private void AddItem(ListBox lb, GameObject obj)
+        {
+            lb.Items.Add($"X = {obj.X}, Y = {obj.Y}");
+        }
+
+        private void AddItems(ListBox lb, List<GameObject> obj)
+        {
+            lb.Items.Clear();
+            obj.ForEach(i => AddItem(lb, i));
+        }
+
+        public void ShowInfo(LogForm form)
+        {
+            form.lblPlayer.Text = $"X = {_objects.Player.X}, Y = {_objects.Player.Y}";
+
+            AddItems(form.lbTanks, _objects.Tanks.Select(i => i as GameObject).ToList());
+            AddItems(form.lbBullets, _objects.Bullets.Select(i => i as GameObject).ToList());
+            AddItems(form.lbApples, _objects.Apples.Select(i => i as GameObject).ToList());
+            AddItems(form.lbWalls, _objects.Walls.Select(i => i as GameObject).ToList());
+            AddItems(form.lbBangs, _objects.Bangs.Select(i => i as GameObject).ToList());
+
         }
     }
 }
