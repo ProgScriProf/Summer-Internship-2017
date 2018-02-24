@@ -23,12 +23,20 @@ namespace Controller
         private Stopwatch timer;
         private Random rnd;
 
+        private bool isGame;
+
         private int Score;
 
         private void MainLoop()
         {
             float dt = timer.ElapsedMilliseconds / 1000f;
             timer.Restart();
+
+
+            // Убираем перезарядку
+            ResetReload(_objects.Player, dt);
+            _objects.Tanks.ForEach(tank => ResetReload(tank, dt));
+            
 
             // Если врагов мало, то с шансом 2% генерируем нового
             CreateTank(2);
@@ -38,11 +46,70 @@ namespace Controller
 
             // С шансом 1/200 поворачиваем танк
             RotateTank(0.5f);
+
+            // Смотрим, если перед танком игрок - стреляем
+            ShootTanks();
             
             // Проверяем столкновения и сдвигаем объекты
             Collision(dt);
-          
+
+            // Если закнчился взрыв, удаляем его
+            _objects.Bangs.Where(bang => bang.OnFinish()).ToList()
+                 .ForEach(bang => _objects.Bangs.Remove(bang));
+
             Draw(_view.Map, dt);
+        }
+
+        private void ResetReload(IShooter shooter, float dt)
+        {
+            if (shooter.Reload > 0)
+            {
+                shooter.Reload -= dt;
+            }
+        }
+
+        private void ShootTanks()
+        {
+            Rectangle p = new Rectangle(_objects.Player.X, _objects.Player.Y, _objects.Player.Width, _objects.Player.Height);
+
+            foreach(var tank in _objects.Tanks)
+            {
+                bool onTheWay = true;
+                ushort lastDir = tank.Direction;
+
+                // Если игрок слева
+                if (p.X + p.Width < tank.X && p.Y + p.Height > tank.Y + tank.Height / 2 && p.Y < tank.Y + tank.Height / 2)
+                {
+                    tank.Direction = MobileObject.left;
+                } // справа
+                else if (p.X > tank.X + tank.Width && p.Y + p.Height > tank.Y + tank.Height / 2 && p.Y < tank.Y + tank.Height / 2)
+                {
+                    tank.Direction = MobileObject.right;
+                } //сверху
+                else if (p.Y + p.Width < tank.Y && p.X + p.Width > tank.X + tank.Width / 2 && p.X < tank.X + tank.Width / 2)
+                {
+                    tank.Direction = MobileObject.up;
+                } // снизу
+                else if (p.Y > tank.Y + tank.Width && p.X + p.Width > tank.X + tank.Width / 2 && p.X < tank.X + tank.Width / 2)
+                {
+                    tank.Direction = MobileObject.down;
+                }
+                else
+                {
+                    onTheWay = false;
+                }
+
+                if (tank.Direction != lastDir) // Сменили путь - добавляем паузу, чтобы сразу не стрелял
+                {
+                    tank.Reload = 0.5f;
+                }
+
+                if (onTheWay) // Если на пути - стреляем
+                {
+                    CreateBullet(tank);
+                }
+                
+            }
         }
 
         private void RotateTank(float percent)
@@ -58,7 +125,7 @@ namespace Controller
 
         private void CreateTank(int percent)
         {
-            if (_objects.Tanks.Count < 5 && rnd.Next(100) <= percent)
+            if (_objects.Tanks.Count < 3 && rnd.Next(100) <= percent)
             {
                 int x = rnd.Next(_view.Map.Width - 30);
                 int y = rnd.Next(_view.Map.Height - 30);
@@ -107,6 +174,11 @@ namespace Controller
                 (obj.Y >= 0) && (obj.Y + obj.Height <= _view.Map.Height);
         }
 
+        private void CreateBang(GameObject obj)
+        {
+            _objects.Bangs.Add(new BangView(obj.X + (obj.Width - 30) / 2, obj.Y + (obj.Height - 30) / 2, 30, 30));
+        }
+
         private void Collision(float dt)
         {
             var delWalls = new List<WallView>();
@@ -120,10 +192,23 @@ namespace Controller
 
             // Смотрим, чтобы не вышел за карту и проверяем,
             // чтобы не было столкновений с объектами "стена"
+            // А еще проверяем, чтобы с танками не встречался
             if (ObjectInScreen(player) && _objects.Walls.Find(wall => ObjectCollision(wall, player)) == null)
             {
-                // НЕТ СТОЛКНОВЕНИЙ С ПРЕГРАДАМИ
-                _objects.Player.Step(dt);
+                bool isFree = true;
+
+                foreach(var tank in _objects.Tanks)
+                {
+                    if (ObjectCollision(tank, player))
+                    {
+                        isFree = false;
+                       // GameOver();
+                    }
+                }
+                if (isFree)
+                {
+                    _objects.Player.Step(dt);
+                }
             }
 
             // Так же выполняем для каждого врага
@@ -133,7 +218,8 @@ namespace Controller
                 // Смотрим столкновения с границей и стенами
                 if (!ObjectInScreen(t) ||
                     _objects.Walls.Find(wall => ObjectCollision(wall, t)) != null ||
-                    _objects.Tanks.Find(tnk => tnk != t ? ObjectCollision(tnk, t) : false) != null)
+                    _objects.Tanks.Find(tnk => tnk != t ? ObjectCollision(tnk, t) : false) != null ||
+                    ObjectCollision(t, player))
                 {
                     // СТОЛКНОВЕНИЕ СО СТЕНОЙ ИЛИ ДРУГИМ ВРАГОМ
                     // Идем в обратном направлении
@@ -162,19 +248,27 @@ namespace Controller
                             delWalls.Add(wall);
                         }
                         delBullet = true;
+                        CreateBang(bullet);
                     }
                 });
 
                 // Смотрим столкновение пули с врагом
                 _objects.Tanks.ForEach(tank =>
                 {
-                    if (ObjectCollision(tank, bullet))
+                    if (ObjectCollision(tank, bullet) && bullet.Sender != tank)
                     {
                         delBullet = true;
                         delTanks.Add(tank);
+                        CreateBang(tank);
                     }
                 });
 
+                // Столкновение пуль с игроком
+                if (ObjectCollision(bullet, _objects.Player) && bullet.Sender != _objects.Player)
+                {
+                    CreateBang(_objects.Player);
+                    GameOver(); // Конец игры
+                }
 
                 if (delBullet)
                 {
@@ -203,7 +297,6 @@ namespace Controller
             delWalls.ForEach(wall => _objects.Walls.Remove(wall));
             delTanks.ForEach(tank => _objects.Tanks.Remove(tank));
             delApples.ForEach(apple => _objects.Apples.Remove(apple));
-
         }
 
         private void Draw(PictureBox pb, float dt)
@@ -223,18 +316,42 @@ namespace Controller
             // Рисуем противников
             _objects.Tanks.ForEach(tank => tank.Draw(g, dt));
 
-            // Рисуем игрока
-            _objects.Player.Draw(g, dt);
-
             // Рисуем яблоки
             _objects.Apples.ForEach(apple => apple.Draw(g, dt));
 
+            // Рисуем взрывы
+            _objects.Bangs.ForEach(bang => bang.Draw(g, dt));
 
-            // Рисуем очки
-            g.DrawImage(SpriteList.Image, new Rectangle(5, 8, 30, 30), new Rectangle(0, 170, 30, 30), GraphicsUnit.Pixel);
 
-            g.DrawString(Score.ToString(), new Font(FontFamily.GenericSansSerif, 22, FontStyle.Bold), 
-                            new SolidBrush(Color.White), new PointF(35, 5));
+            if (isGame)
+            {
+                // Рисуем игрока
+                _objects.Player.Draw(g, dt);
+
+                // Рисуем очки
+                g.DrawImage(SpriteList.Image, new Rectangle(5, 8, 30, 30), new Rectangle(0, 170, 30, 30), GraphicsUnit.Pixel);
+
+                g.DrawString(Score.ToString(), new Font(FontFamily.GenericSansSerif, 22, FontStyle.Bold),
+                                new SolidBrush(Color.White), new PointF(35, 5));
+            }
+            else
+            {
+                g.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.Black)),
+                    new Rectangle(0, 0, pb.Width, pb.Height));
+                g.DrawString("Game Over", new Font(FontFamily.GenericSansSerif, 72, FontStyle.Bold),
+                                new SolidBrush(Color.LightGray), new PointF(40, 100));
+
+                g.DrawString($"Score: {Score}", new Font(FontFamily.GenericSansSerif, 32, FontStyle.Bold),
+                                new SolidBrush(Color.LightGray), new PointF(240, 220));
+
+                if (DateTime.Now.Millisecond < 500)
+                {
+                    g.DrawString("Try again", new Font(FontFamily.GenericSansSerif, 28, FontStyle.Bold),
+                                    new SolidBrush(Color.LightGray), new PointF(240, 310));
+                }
+            }
+
+            
 
             pb.Image = bm;
         }
@@ -248,27 +365,44 @@ namespace Controller
 
         private void CreateBullet(MobileObject obj)
         {
+            // Если у объекта еще перезарядка, то не стреляем
+            if ((obj as IShooter).Reload > 0)
+            {
+                return;
+            }
+
             float x = obj.X + obj.Width / 2 - 2;
             float y = obj.Y + obj.Height / 2 - 2;
 
             int w = obj.IsHorizontal() ? 8 : 4;
             int h = obj.IsVertical() ? 8 : 4;
 
-            _objects.Bullets.Add(new BulletView(x, y, obj.Direction, w, h, false));
+            _objects.Bullets.Add(new BulletView(x, y, obj.Direction, w, h, obj));
+            (obj as IShooter).Reload = 0.3f;
         }
 
         public void StartGame()
         {
+            Score = 0;
             LoadLevel(1);
-            _view.ActiveTimer = true;
+            _objects.Tanks = new List<TankView>();
+            _objects.Bullets = new List<BulletView>();
+            _objects.Apples = new List<AppleView>();
+            _objects.Bangs = new List<BangView>();
             timer = new Stopwatch();
             timer.Start();
-            MainLoop();
-            Score = 0;
+            _view.ActiveTimer = true;
+            isGame = true;
+            MainLoop();           
         }
 
         public void KeyDown(Keys key)
         {
+            if (!isGame)
+            {
+                StartGame();
+                return;
+            }
             switch (key)
             {
                 case Keys.A:
@@ -293,6 +427,12 @@ namespace Controller
             }
         }
 
+        private void GameOver()
+        {
+            isGame = false;
+            _objects.Player.OutScreen();
+        }
+
         public void NewGame()
         {
             StartGame();
@@ -306,9 +446,6 @@ namespace Controller
             {
                 // Загружаем уровень
                 _objects.Walls = new List<WallView>();
-                _objects.Tanks = new List<TankView>();
-                _objects.Bullets = new List<BulletView>();
-                _objects.Apples = new List<AppleView>();
 
                 using (StreamReader sr = File.OpenText(path))
                 {

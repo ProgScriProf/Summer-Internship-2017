@@ -42,8 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameObjects\Apple.cs" />
+    <Compile Include="GameObjects\Bang.cs" />
     <Compile Include="GameObjects\Bullet.cs" />
     <Compile Include="GameObjects\GameObject.cs" />
+    <Compile Include="GameObjects\IShooter.cs" />
     <Compile Include="GameObjects\StaticObject.cs" />
     <Compile Include="GameObjects\Wall.cs" />
     <Compile Include="IGameObjects.cs" />
@@ -54,6 +56,7 @@
     <Compile Include="GameObjects\Tank.cs" />
     <Compile Include="SpriteList.cs" />
     <Compile Include="ViewObjects\AppleView.cs" />
+    <Compile Include="ViewObjects\BangView.cs" />
     <Compile Include="ViewObjects\BulletView.cs" />
     <Compile Include="ViewObjects\KolobokView.cs" />
     <Compile Include="ViewObjects\TankView.cs" />

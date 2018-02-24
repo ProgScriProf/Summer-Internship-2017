@@ -19,6 +19,9 @@ namespace Model
         private float _speed;
         private int _count;
         private float _index;
+        private bool _one;
+        private bool _end;
+
 
         public static Image Image
         {
@@ -32,7 +35,7 @@ namespace Model
             }
         }
 
-        public SpriteList(int x, int y, int w, int h, float speed = 0, int count = 0)
+        public SpriteList(int x, int y, int w, int h, float speed = 0, int count = 0, bool one = false)
         {
             // Если карта спрайтов не загружена - загружаем
             if (_img == null)
@@ -48,6 +51,8 @@ namespace Model
             _speed = speed;
             _count = count;
             _index = 0;
+            _one = one;
+            _end = false;
         }
 
         public void Draw(Graphics g, int x, int y, float dx = 0)
@@ -55,7 +60,15 @@ namespace Model
             _index += dx * _speed;
             if (_index > _count)
             {
-                _index -= _count;
+                if (_one) // Если один раз
+                {
+                    _end = true;
+                    _index = _count - 1;
+                }
+                else // если циклично
+                {
+                    _index -= _count;
+                }
             }
 
             g.DrawImage(_img, new Rectangle(x, y, _w, _h), new Rectangle(_x + (int)_index * _w, _y, _w, _h), GraphicsUnit.Pixel);      
@@ -72,6 +85,11 @@ namespace Model
             {
                 throw new FileNotFoundException("File sprites not found");
             }
+        }
+
+        public bool OnFinish()
+        {
+            return _end;
         }
 
         public void SetPosition(int x, int y)

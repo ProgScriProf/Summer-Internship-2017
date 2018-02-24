@@ -8,11 +8,11 @@ namespace Model.GameObjects
 {
     public class Bullet : MobileObject
     {
-        public bool isKill;
-        public Bullet(float x, float y, ushort direction, int width, int height, bool kill) : base (x, y, direction, width, height)
+        public GameObject Sender;
+        public Bullet(float x, float y, ushort direction, int width, int height, GameObject sender) : base (x, y, direction, width, height)
         {
-            speed = speed * 4;
-            isKill = kill;
+            speed = speed * 3;
+            Sender = sender;
         }
     }
 }

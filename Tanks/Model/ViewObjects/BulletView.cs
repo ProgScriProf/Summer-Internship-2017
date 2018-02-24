@@ -12,7 +12,7 @@ namespace Model.ViewObjects
     {
         protected SpriteList _sprite;
 
-        public BulletView(float x, float y, ushort direction, int width, int height, bool kill) : base (x, y, direction, width, height, kill)
+        public BulletView(float x, float y, ushort direction, int width, int height, GameObject sender) : base (x, y, direction, width, height, sender)
         {
             // Тут передаем координаты на спрайте
             _sprite = new SpriteList(180, height * Direction, width, height, 0, 1);

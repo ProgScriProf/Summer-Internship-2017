@@ -15,5 +15,6 @@ namespace Model
         List<TankView> Tanks { get; set; }
         List<BulletView> Bullets { get; set; }
         List<AppleView> Apples { get; set; }
+        List<BangView> Bangs { get; set; }
     }
 }
