@@ -46,7 +46,6 @@ namespace View
             this.imgMap.Size = new System.Drawing.Size(650, 550);
             this.imgMap.TabIndex = 0;
             this.imgMap.TabStop = false;
-            this.imgMap.Click += new System.EventHandler(this.btnNewGame_Click);
             // 
             // timer
             // 

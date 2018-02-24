@@ -52,6 +52,7 @@
     <Compile Include="GameObjects\Tank.cs" />
     <Compile Include="SpriteList.cs" />
     <Compile Include="ViewObjects\KolobokView.cs" />
+    <Compile Include="ViewObjects\TankView.cs" />
     <Compile Include="ViewObjects\WallView.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

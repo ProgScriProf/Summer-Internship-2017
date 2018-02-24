@@ -12,7 +12,6 @@ namespace Model
     {
         KolobokView Player { get; set; }
         List<WallView> Walls { get; set; }
-
-        List<Tank> Tanks { get; set; }
+        List<TankView> Tanks { get; set; }
     }
 }

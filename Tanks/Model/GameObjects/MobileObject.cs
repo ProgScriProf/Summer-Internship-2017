@@ -47,6 +47,11 @@ namespace Model.GameObjects
             Direction = dir;
         }
 
+        public void ChangeDirection()
+        {
+            // Меням направление на противоположное
+            Direction = (ushort)((2 << (Direction % 2)) - Direction);
+        }
         public void Step(float dx)
         {
             float step = speed * dx;

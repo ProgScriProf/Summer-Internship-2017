@@ -21,17 +21,53 @@ namespace Controller
         private IGameObjects _objects;
 
         private Stopwatch timer;
+        private Random rnd;
 
         private void MainLoop()
         {
             float dt = timer.ElapsedMilliseconds / 1000f;
             timer.Restart();
 
-            // Проверяем столкновения
+            // Если врагов мало, то с шансом 1% генерируем нового
+            CreateTank(2);
+
+            // С шансом 1/200 поворачиваем танк
+            RotateTank(0.5f);
+            
+            // Проверяем столкновения и сдвигаем объекты
             Collision(dt);
           
-
             Draw(_view.Map, dt);
+        }
+
+        private void RotateTank(float percent)
+        {
+            _objects.Tanks.ForEach(tank =>
+            {
+                if (rnd.Next(100) < percent)
+                {
+                    tank.ChangeDirection((ushort)rnd.Next(4));
+                }
+            });
+        }
+
+        private void CreateTank(int percent)
+        {
+            if (_objects.Tanks.Count < 5 && rnd.Next(100) <= percent)
+            {
+                int x = rnd.Next(_view.Map.Width - 30);
+                int y = rnd.Next(_view.Map.Height - 30);
+                var tank = new TankView(x, y, (ushort)rnd.Next(4), 30, 30);
+
+                // Если он на свободном месте генерируется
+                if (_objects.Walls.Find(wall => ObjectCollision(wall, tank)) == null &&
+                    ObjectCollision(_objects.Player, tank) == false &&
+                    _objects.Tanks.Find(tnk => tnk != tank ? ObjectCollision(tnk, tank) : false) == null)
+                {
+                    _objects.Tanks.Add(tank);
+                }
+
+            }
         }
 
         private bool ObjectCollision(GameObject obj1, GameObject obj2)
@@ -51,16 +87,29 @@ namespace Controller
 
             // Смотрим, чтобы не вышел за карту и проверяем, и потом проверяем
             // чтобы не было столкновений с объектами "стена"
-            if (player.X < 0 || player.X + player.Width > _view.Map.Width ||
+            if (!(player.X < 0 || player.X + player.Width > _view.Map.Width ||
                 player.Y < 0 || player.Y + player.Height > _view.Map.Height ||
-                _objects.Walls.Find(wall => ObjectCollision(wall, player)) != null)
+                _objects.Walls.Find(wall => ObjectCollision(wall, player)) != null))
             {
-                // ЕСТЬ СТОЛКНОВЕНИЕ С ПРЕГРАДОЙ
-            }
-            else
-            {
+                // НЕТ СТОЛКНОВЕНИЙ С ПРЕГРАДАМИ
                 _objects.Player.Step(dt);
             }
+
+            // Так же выполняем для каждого врага
+            _objects.Tanks.ForEach(t =>
+            {
+                t.Step(dt);
+                // Смотрим столкновения с границей и стенами
+                if (t.X < 0 || t.X + t.Width > _view.Map.Width || t.Y < 0 || t.Y + t.Height > _view.Map.Height ||
+                    _objects.Walls.Find(wall => ObjectCollision(wall, t)) != null ||
+                    _objects.Tanks.Find(tnk => tnk != t ? ObjectCollision(tnk, t) : false) != null)
+                {
+                    // СТОЛКНОВЕНИЕ СО СТЕНОЙ ИЛИ ДРУГИМ ВРАГОМ
+                    // Идем в обратном направлении
+                    t.ChangeDirection();
+                    t.Step(dt);
+                }
+            }); 
 
 
 
@@ -77,6 +126,9 @@ namespace Controller
             // Рисуем преграды
             _objects.Walls.ForEach(wall => wall.Draw(g));
 
+            // Рисуем противников
+            _objects.Tanks.ForEach(tank => tank.Draw(g, dt));
+
             // Рисуем игрока
             _objects.Player.Draw(g, dt);
 
@@ -87,6 +139,7 @@ namespace Controller
         {
             _view = view;
             _objects = objects;
+            rnd = new Random();
         }
 
         public void StartGame()
@@ -134,6 +187,7 @@ namespace Controller
             {
                 // Загружаем уровень
                 _objects.Walls = new List<WallView>();
+                _objects.Tanks = new List<TankView>();
 
                 using (StreamReader sr = File.OpenText(path))
                 {

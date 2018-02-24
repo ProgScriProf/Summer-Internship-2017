@@ -8,14 +8,10 @@ namespace Model.GameObjects
 {
     public class Tank : MobileObject
     {
-        public Tank(int x, int y, ushort direction) : base (x, y, direction)
-        {
-
-        }
-
-        public Tank(int x, int y) : this(x, y, up)
+        public Tank(int x, int y, ushort direction, int width, int height) : base(x, y, direction, width, height)
         {
 
         }
     }
+        
 }

@@ -12,10 +12,10 @@ namespace Model
     {
         KolobokView _player;
         List<WallView> _walls;
-        List<Tank> _tanks;
+        List<TankView> _tanks;
 
         public KolobokView Player { get => _player; set => _player = value; }
-        public List<Tank> Tanks { get => _tanks; set => _tanks = value; }
+        public List<TankView> Tanks { get => _tanks; set => _tanks = value; }
         public List<WallView> Walls { get => _walls; set => _walls = value; }
     }
 }
