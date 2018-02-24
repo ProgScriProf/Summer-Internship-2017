@@ -20,6 +20,18 @@ namespace Model
         private int _count;
         private float _index;
 
+        public static Image Image
+        {
+            get
+            {
+                if (_img == null)
+                {
+                    throw new NullReferenceException("SpriteList not found");
+                }
+                return _img;
+            }
+        }
+
         public SpriteList(int x, int y, int w, int h, float speed = 0, int count = 0)
         {
             // Если карта спрайтов не загружена - загружаем
@@ -67,7 +79,5 @@ namespace Model
             _x = x;
             _y = y;
         }
-
-       
     }
 }

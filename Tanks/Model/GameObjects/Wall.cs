@@ -8,7 +8,7 @@ namespace Model.GameObjects
 {
     public class Wall : StaticObject
     {
-        bool Destroyable;
+        public bool Destroyable;
 
         public Wall(int x, int y, int width, int height, bool destroyable = false) : base(x, y, width, height)
         {

@@ -13,9 +13,13 @@ namespace Model
         KolobokView _player;
         List<WallView> _walls;
         List<TankView> _tanks;
+        List<BulletView> _bullets;
+        List<AppleView> _apples;
 
         public KolobokView Player { get => _player; set => _player = value; }
         public List<TankView> Tanks { get => _tanks; set => _tanks = value; }
         public List<WallView> Walls { get => _walls; set => _walls = value; }
+        public List<BulletView> Bullets { get => _bullets; set => _bullets = value; }
+        public List<AppleView> Apples { get => _apples; set => _apples = value; }
     }
 }

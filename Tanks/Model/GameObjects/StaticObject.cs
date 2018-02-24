@@ -8,10 +8,10 @@ namespace Model.GameObjects
 {
     public abstract class StaticObject : GameObject
     {
-        public StaticObject(int x, int y, int width, int height)
+        public StaticObject(float x, float y, int width, int height)
         {
-            X = x;
-            Y = y;
+            _x = x;
+            _y = y;
             Width = width;
             Height = height;
         }

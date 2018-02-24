@@ -13,5 +13,7 @@ namespace Model
         KolobokView Player { get; set; }
         List<WallView> Walls { get; set; }
         List<TankView> Tanks { get; set; }
+        List<BulletView> Bullets { get; set; }
+        List<AppleView> Apples { get; set; }
     }
 }

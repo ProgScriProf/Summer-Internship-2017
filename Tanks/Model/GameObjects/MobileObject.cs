@@ -18,7 +18,21 @@ namespace Model.GameObjects
 
         public float speed = 100;
 
-        protected ushort Direction { get; set; }
+        private ushort _dir;
+
+        public ushort Direction
+        {
+            get
+            {
+                return _dir;
+            }
+            set
+            {
+                if (value < 0 || value > 3)
+                    throw new ArgumentOutOfRangeException($"Direction may be (0-3). Current value: {value}");
+                _dir = value;
+            }
+        }
 
         public MobileObject(float x, float y, ushort direction, int width, int height)
         {
@@ -41,10 +55,7 @@ namespace Model.GameObjects
 
         public void ChangeDirection(ushort dir)
         {
-            if (dir < 0 || dir > 3)
-                throw new ArgumentOutOfRangeException($"Direction may be (0-3). Current value: {dir}");
-
-            Direction = dir;
+             Direction = dir;
         }
 
         public void ChangeDirection()
@@ -52,6 +63,17 @@ namespace Model.GameObjects
             // Меням направление на противоположное
             Direction = (ushort)((2 << (Direction % 2)) - Direction);
         }
+
+        public bool IsHorizontal()
+        {
+            return Direction % 2 == 0;
+        }
+
+        public bool IsVertical()
+        {
+            return !IsHorizontal();
+        }
+
         public void Step(float dx)
         {
             float step = speed * dx;

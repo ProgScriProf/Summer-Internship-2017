@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameObjects\Apple.cs" />
+    <Compile Include="GameObjects\Bullet.cs" />
     <Compile Include="GameObjects\GameObject.cs" />
     <Compile Include="GameObjects\StaticObject.cs" />
     <Compile Include="GameObjects\Wall.cs" />
@@ -51,6 +53,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GameObjects\Tank.cs" />
     <Compile Include="SpriteList.cs" />
+    <Compile Include="ViewObjects\AppleView.cs" />
+    <Compile Include="ViewObjects\BulletView.cs" />
     <Compile Include="ViewObjects\KolobokView.cs" />
     <Compile Include="ViewObjects\TankView.cs" />
     <Compile Include="ViewObjects\WallView.cs" />

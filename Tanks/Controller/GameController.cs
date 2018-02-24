@@ -23,13 +23,18 @@ namespace Controller
         private Stopwatch timer;
         private Random rnd;
 
+        private int Score;
+
         private void MainLoop()
         {
             float dt = timer.ElapsedMilliseconds / 1000f;
             timer.Restart();
 
-            // Если врагов мало, то с шансом 1% генерируем нового
+            // Если врагов мало, то с шансом 2% генерируем нового
             CreateTank(2);
+
+            // Если яблок мало, то с шансом 1% генерируем нового
+            CreateApple(1);
 
             // С шансом 1/200 поворачиваем танк
             RotateTank(0.5f);
@@ -70,6 +75,24 @@ namespace Controller
             }
         }
 
+        private void CreateApple(int percent)
+        {
+            if (_objects.Apples.Count < 5 && rnd.Next(100) <= percent)
+            {
+                int x = rnd.Next(_view.Map.Width - 30);
+                int y = rnd.Next(_view.Map.Height - 30);
+                var apple = new AppleView(x, y, 30, 30);
+
+                // Если он на свободном месте генерируется
+                if (_objects.Walls.Find(wall => ObjectCollision(wall, apple)) == null &&
+                    ObjectCollision(_objects.Player, apple) == false)
+                {
+                    _objects.Apples.Add(apple);
+                }
+
+            }
+        }
+
         private bool ObjectCollision(GameObject obj1, GameObject obj2)
         {
             return (obj1.X + obj1.Width > obj2.X) &&
@@ -78,18 +101,26 @@ namespace Controller
                 (obj1.Y <= obj2.Y + obj2.Height);
         }
 
+        private bool ObjectInScreen(GameObject obj)
+        {
+            return (obj.X >= 0) && (obj.X + obj.Width <= _view.Map.Width) &&
+                (obj.Y >= 0) && (obj.Y + obj.Height <= _view.Map.Height);
+        }
+
         private void Collision(float dt)
         {
+            var delWalls = new List<WallView>();
+            var delBullets = new List<BulletView>();
+            var delTanks = new List<TankView>();
+            var delApples = new List<AppleView>();
+
             // Создаем нового игрока, смотрим его новое положение
             MobileObject player = _objects.Player.Clone() as MobileObject;
             player.Step(dt);
 
-
-            // Смотрим, чтобы не вышел за карту и проверяем, и потом проверяем
+            // Смотрим, чтобы не вышел за карту и проверяем,
             // чтобы не было столкновений с объектами "стена"
-            if (!(player.X < 0 || player.X + player.Width > _view.Map.Width ||
-                player.Y < 0 || player.Y + player.Height > _view.Map.Height ||
-                _objects.Walls.Find(wall => ObjectCollision(wall, player)) != null))
+            if (ObjectInScreen(player) && _objects.Walls.Find(wall => ObjectCollision(wall, player)) == null)
             {
                 // НЕТ СТОЛКНОВЕНИЙ С ПРЕГРАДАМИ
                 _objects.Player.Step(dt);
@@ -100,7 +131,7 @@ namespace Controller
             {
                 t.Step(dt);
                 // Смотрим столкновения с границей и стенами
-                if (t.X < 0 || t.X + t.Width > _view.Map.Width || t.Y < 0 || t.Y + t.Height > _view.Map.Height ||
+                if (!ObjectInScreen(t) ||
                     _objects.Walls.Find(wall => ObjectCollision(wall, t)) != null ||
                     _objects.Tanks.Find(tnk => tnk != t ? ObjectCollision(tnk, t) : false) != null)
                 {
@@ -109,9 +140,69 @@ namespace Controller
                     t.ChangeDirection();
                     t.Step(dt);
                 }
-            }); 
+            });
+
+            // Смотрим столкновение пуль
+            _objects.Bullets.ForEach(bullet =>
+            {
+                bool delBullet = false;
+
+                if (!ObjectInScreen(bullet))
+                {
+                    delBullet = true;
+                }
+
+                // Смотрим столкновения пули со стенами
+                _objects.Walls.ForEach(wall =>
+                {
+                    if (ObjectCollision(bullet, wall))
+                    {
+                        if (wall.Destroyable)
+                        {
+                            delWalls.Add(wall);
+                        }
+                        delBullet = true;
+                    }
+                });
+
+                // Смотрим столкновение пули с врагом
+                _objects.Tanks.ForEach(tank =>
+                {
+                    if (ObjectCollision(tank, bullet))
+                    {
+                        delBullet = true;
+                        delTanks.Add(tank);
+                    }
+                });
 
 
+                if (delBullet)
+                {
+                    delBullets.Add(bullet);
+                }
+                else
+                {
+                    bullet.Step(dt);
+                }
+
+            });
+
+            // Собираем яблоки
+            _objects.Apples.ForEach(apple =>
+            {
+                if (ObjectCollision(player, apple))
+                {
+                    delApples.Add(apple);
+                    Score++;
+                }
+            });
+
+
+            // Удаляем элементы
+            delBullets.ForEach(bullet => _objects.Bullets.Remove(bullet));
+            delWalls.ForEach(wall => _objects.Walls.Remove(wall));
+            delTanks.ForEach(tank => _objects.Tanks.Remove(tank));
+            delApples.ForEach(apple => _objects.Apples.Remove(apple));
 
         }
 
@@ -126,11 +217,24 @@ namespace Controller
             // Рисуем преграды
             _objects.Walls.ForEach(wall => wall.Draw(g));
 
+            // Рисуем пули
+            _objects.Bullets.ForEach(bullet => bullet.Draw(g));
+
             // Рисуем противников
             _objects.Tanks.ForEach(tank => tank.Draw(g, dt));
 
             // Рисуем игрока
             _objects.Player.Draw(g, dt);
+
+            // Рисуем яблоки
+            _objects.Apples.ForEach(apple => apple.Draw(g, dt));
+
+
+            // Рисуем очки
+            g.DrawImage(SpriteList.Image, new Rectangle(5, 8, 30, 30), new Rectangle(0, 170, 30, 30), GraphicsUnit.Pixel);
+
+            g.DrawString(Score.ToString(), new Font(FontFamily.GenericSansSerif, 22, FontStyle.Bold), 
+                            new SolidBrush(Color.White), new PointF(35, 5));
 
             pb.Image = bm;
         }
@@ -142,6 +246,17 @@ namespace Controller
             rnd = new Random();
         }
 
+        private void CreateBullet(MobileObject obj)
+        {
+            float x = obj.X + obj.Width / 2 - 2;
+            float y = obj.Y + obj.Height / 2 - 2;
+
+            int w = obj.IsHorizontal() ? 8 : 4;
+            int h = obj.IsVertical() ? 8 : 4;
+
+            _objects.Bullets.Add(new BulletView(x, y, obj.Direction, w, h, false));
+        }
+
         public void StartGame()
         {
             LoadLevel(1);
@@ -149,6 +264,7 @@ namespace Controller
             timer = new Stopwatch();
             timer.Start();
             MainLoop();
+            Score = 0;
         }
 
         public void KeyDown(Keys key)
@@ -171,6 +287,9 @@ namespace Controller
                 case Keys.Down:
                     _objects.Player.ChangeDirection(MobileObject.down);
                     break;
+                case Keys.Space:
+                    CreateBullet(_objects.Player);
+                    break;
             }
         }
 
@@ -188,6 +307,8 @@ namespace Controller
                 // Загружаем уровень
                 _objects.Walls = new List<WallView>();
                 _objects.Tanks = new List<TankView>();
+                _objects.Bullets = new List<BulletView>();
+                _objects.Apples = new List<AppleView>();
 
                 using (StreamReader sr = File.OpenText(path))
                 {
@@ -205,11 +326,11 @@ namespace Controller
                                 case 'p': // игрок
                                     _objects.Player = new KolobokView(BlockSize * x, BlockSize * y, 1, 30, 30);
                                     break;
-                                case '*': // непробиваемая стена
-                                    _objects.Walls.Add(new WallView(BlockSize * x, BlockSize * y, BlockSize, BlockSize, false));
-                                    break;
-                                case '=': // пробиваемая стена
+                                case '*': // пробиваемая стена
                                     _objects.Walls.Add(new WallView(BlockSize * x, BlockSize * y, BlockSize, BlockSize, true));
+                                    break;
+                                case '=': // непробиваемая стена
+                                    _objects.Walls.Add(new WallView(BlockSize * x, BlockSize * y, BlockSize, BlockSize, false));
                                     break;
                             }
                         }

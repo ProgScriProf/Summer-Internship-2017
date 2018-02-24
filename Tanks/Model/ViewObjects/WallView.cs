@@ -14,7 +14,7 @@ namespace Model.ViewObjects
 
         public WallView(int x, int y, int width, int height, bool destroyable = false) :  base(x, y, width, height, destroyable)
         {
-            if (destroyable)
+            if (!destroyable)
             {
                 _sprite = new SpriteList(50, 120, width, height);
             }
