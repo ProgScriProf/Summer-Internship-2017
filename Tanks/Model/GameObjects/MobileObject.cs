@@ -2,46 +2,39 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace Model
+namespace Model.GameObjects
 {
     // Двигающийся объект
     // Имеет направление движения и координаты
-    public abstract class MobileObject
+    public class MobileObject : GameObject, ICloneable
     {
         public const ushort left = 0;
         public const ushort up = 1;
         public const ushort right = 2;
         public const ushort down = 3;
 
-        private ushort _direction;
-        private int _x;
-        private int _y;
+        public float speed = 100;
 
-        public int X
-        {
-            get
-            {
-                return _x;
-            }
-        }
-        public int Y
-        {
-            get
-            {
-                return _y;
-            }
-        }
+        protected ushort Direction { get; set; }
 
-        public MobileObject(int x, int y, ushort direction)
+        public MobileObject(float x, float y, ushort direction, int width, int height)
         {
-            _direction = direction;
+            Direction = direction;
             _x = x;
             _y = y;
+            Width = width;
+            Height = height;
         }
 
-        public MobileObject(int x, int y) : this(x, y, up)
+        public MobileObject(float x, float y, ushort direction) : this(x, y, direction, 50, 50)
+        {
+            
+        }
+
+        public MobileObject(float x, float y) : this(x, y, up)
         {
 
         }        
@@ -51,8 +44,27 @@ namespace Model
             if (dir < 0 || dir > 3)
                 throw new ArgumentOutOfRangeException($"Direction may be (0-3). Current value: {dir}");
 
-            _direction = dir;
+            Direction = dir;
         }
 
+        public void Step(float dx)
+        {
+            float step = speed * dx;
+
+            // Переходим на шаг
+            if (Direction % 2 == 0) // Если по горизонтали
+            {
+                _x += (Direction - 1) * step;
+            }
+            else
+            {
+                _y += (Direction - 2) * step ;
+            }
+        }
+
+        public object Clone()
+        {
+            return new MobileObject(X, Y, Direction, Width, Height);
+        }
     }
 }

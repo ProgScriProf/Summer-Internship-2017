@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model
+namespace Model.GameObjects
 {
     // Главный игрок
     public class Kolobok : MobileObject
     {
-        public Kolobok(int x, int y, ushort direction) : base(x, y, direction)
+        public Kolobok(int x, int y, ushort direction, int width, int height) : base(x, y, direction, width, height)
         {
-
         }
 
     }

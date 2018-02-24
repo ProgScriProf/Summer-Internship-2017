@@ -11,8 +11,9 @@ namespace Controller
     public interface IViewController
     {
         void SetController(IGameController controller);
-       // void Draw(Bitmap image);
 
+        bool ActiveTimer { get; set; }
+        // Graphics Map { get; }
         PictureBox Map { get; }
     }
 }

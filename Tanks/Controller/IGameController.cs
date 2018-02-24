@@ -11,5 +11,6 @@ namespace Controller
     {
         void NewGame();
         void KeyDown(Keys key);
+        void Timer();
     }
 }

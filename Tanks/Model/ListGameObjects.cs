@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Model.GameObjects;
+using Model.ViewObjects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +10,12 @@ namespace Model
 {
     public class ListGameObjects : IGameObjects
     {
-        Kolobok _player;
+        KolobokView _player;
+        List<WallView> _walls;
         List<Tank> _tanks;
 
-        public Kolobok Player { get => _player; set => _player = value; }
+        public KolobokView Player { get => _player; set => _player = value; }
         public List<Tank> Tanks { get => _tanks; set => _tanks = value; }
+        public List<WallView> Walls { get => _walls; set => _walls = value; }
     }
 }

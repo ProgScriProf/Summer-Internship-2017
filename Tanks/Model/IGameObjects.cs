@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Model.GameObjects;
+using Model.ViewObjects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +10,9 @@ namespace Model
 {
     public interface IGameObjects 
     {
-        Kolobok Player { get; set; }
+        KolobokView Player { get; set; }
+        List<WallView> Walls { get; set; }
+
         List<Tank> Tanks { get; set; }
     }
 }
