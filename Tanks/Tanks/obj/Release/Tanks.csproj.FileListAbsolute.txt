@@ -1,0 +1,15 @@
+C:\Git\Summer-Internship-2017\Tanks\Tanks\bin\Release\Tanks.exe.config
+C:\Git\Summer-Internship-2017\Tanks\Tanks\bin\Release\Tanks.exe
+C:\Git\Summer-Internship-2017\Tanks\Tanks\bin\Release\Tanks.pdb
+C:\Git\Summer-Internship-2017\Tanks\Tanks\bin\Release\Controller.dll
+C:\Git\Summer-Internship-2017\Tanks\Tanks\bin\Release\Model.dll
+C:\Git\Summer-Internship-2017\Tanks\Tanks\bin\Release\View.dll
+C:\Git\Summer-Internship-2017\Tanks\Tanks\bin\Release\Controller.pdb
+C:\Git\Summer-Internship-2017\Tanks\Tanks\bin\Release\Model.pdb
+C:\Git\Summer-Internship-2017\Tanks\Tanks\bin\Release\View.pdb
+C:\Git\Summer-Internship-2017\Tanks\Tanks\obj\Release\Tanks.csprojResolveAssemblyReference.cache
+C:\Git\Summer-Internship-2017\Tanks\Tanks\obj\Release\Tanks.Properties.Resources.resources
+C:\Git\Summer-Internship-2017\Tanks\Tanks\obj\Release\Tanks.csproj.GenerateResource.Cache
+C:\Git\Summer-Internship-2017\Tanks\Tanks\obj\Release\Tanks.csproj.CoreCompileInputs.cache
+C:\Git\Summer-Internship-2017\Tanks\Tanks\obj\Release\Tanks.exe
+C:\Git\Summer-Internship-2017\Tanks\Tanks\obj\Release\Tanks.pdb

@@ -1,0 +1,8 @@
+C:\Git\Summer-Internship-2017\Tanks\Controller\bin\Release\Controller.dll
+C:\Git\Summer-Internship-2017\Tanks\Controller\bin\Release\Controller.pdb
+C:\Git\Summer-Internship-2017\Tanks\Controller\bin\Release\Model.dll
+C:\Git\Summer-Internship-2017\Tanks\Controller\bin\Release\Model.pdb
+C:\Git\Summer-Internship-2017\Tanks\Controller\obj\Release\Controller.csprojResolveAssemblyReference.cache
+C:\Git\Summer-Internship-2017\Tanks\Controller\obj\Release\Controller.csproj.CoreCompileInputs.cache
+C:\Git\Summer-Internship-2017\Tanks\Controller\obj\Release\Controller.dll
+C:\Git\Summer-Internship-2017\Tanks\Controller\obj\Release\Controller.pdb

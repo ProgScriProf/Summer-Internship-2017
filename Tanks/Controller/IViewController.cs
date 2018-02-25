@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Model;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -11,9 +12,13 @@ namespace Controller
     public interface IViewController
     {
         void SetController(IGameController controller);
+        void Render(bool isGame = true);
 
         bool ActiveTimer { get; set; }
+        int MapWidth { get; }
+        int MapHeight { get; }
+
         // Graphics Map { get; }
-        PictureBox Map { get; }
+        //PictureBox Map { get; }
     }
 }

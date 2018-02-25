@@ -1,6 +1,5 @@
 C:\Git\Summer-Internship-2017\Tanks\Model\bin\Debug\Model.dll
 C:\Git\Summer-Internship-2017\Tanks\Model\bin\Debug\Model.pdb
-C:\Git\Summer-Internship-2017\Tanks\Model\obj\Debug\Model.csprojResolveAssemblyReference.cache
 C:\Git\Summer-Internship-2017\Tanks\Model\obj\Debug\Model.csproj.CoreCompileInputs.cache
 C:\Git\Summer-Internship-2017\Tanks\Model\obj\Debug\Model.dll
 C:\Git\Summer-Internship-2017\Tanks\Model\obj\Debug\Model.pdb

@@ -17,5 +17,7 @@ namespace Model
         List<AppleView> Apples { get; set; }
         List<BangView> Bangs { get; set; }
         List<WaterView> Water { get; set; }
+
+        int Score { get; set; }
     }
 }

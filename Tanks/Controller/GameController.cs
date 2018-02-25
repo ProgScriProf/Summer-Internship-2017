@@ -1,6 +1,5 @@
 ﻿using Model;
 using Model.GameObjects;
-using Model.ViewObjects;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
+using Model.ViewObjects;
 
 namespace Controller
 {
@@ -25,13 +25,10 @@ namespace Controller
 
         private bool isGame;
 
-        private int Score;
-
         private void MainLoop()
         {
             float dt = timer.ElapsedMilliseconds / 1000f;
             timer.Restart();
-
 
             // Убираем перезарядку
             ResetReload(_objects.Player, dt);
@@ -54,11 +51,15 @@ namespace Controller
             // Смотрим, если перед танком игрок - стреляем
             ShootTanks();
 
+            // Смещаем спрайты анимации
+            SetSprites(dt);
+
             // Если закнчился взрыв, удаляем его
             _objects.Bangs.Where(bang => bang.OnFinish()).ToList()
                  .ForEach(bang => _objects.Bangs.Remove(bang));
 
-            Draw(_view.Map, dt);
+            _view.Render(isGame);
+            //Draw(_view.Map, dt);
         }
 
         private void ResetReload(IShooter shooter, float dt)
@@ -67,6 +68,17 @@ namespace Controller
             {
                 shooter.Reload -= dt;
             }
+        }
+
+        delegate void func(float dt);
+
+        private void SetSprites(float dt)
+        {
+            func f = _objects.Player.SetSprite;
+            _objects.Apples.ForEach(i => f += i.SetSprite);
+            _objects.Bangs.ForEach(i => f += i.SetSprite);
+            _objects.Tanks.ForEach(i => f += i.SetSprite);
+            f(dt);
         }
 
         private void ShootTanks()
@@ -128,8 +140,8 @@ namespace Controller
         {
             if (_objects.Tanks.Count < 3 && rnd.Next(100) <= percent)
             {
-                int x = rnd.Next(_view.Map.Width - 30);
-                int y = rnd.Next(_view.Map.Height - 30);
+                int x = rnd.Next(_view.MapWidth - 30);
+                int y = rnd.Next(_view.MapHeight - 30);
                 var tank = new TankView(x, y, (ushort)rnd.Next(4), 30, 30);
 
                 // Если он на свободном месте генерируется
@@ -148,8 +160,8 @@ namespace Controller
         {
             if (_objects.Apples.Count < 5 && rnd.Next(100) <= percent)
             {
-                int x = rnd.Next(_view.Map.Width - 30);
-                int y = rnd.Next(_view.Map.Height - 30);
+                int x = rnd.Next(_view.MapWidth - 30);
+                int y = rnd.Next(_view.MapHeight - 30);
                 var apple = new AppleView(x, y, 30, 30);
 
                 // Если он на свободном месте генерируется
@@ -173,8 +185,8 @@ namespace Controller
 
         private bool ObjectInScreen(GameObject obj)
         {
-            return (obj.X >= 0) && (obj.X + obj.Width <= _view.Map.Width) &&
-                (obj.Y >= 0) && (obj.Y + obj.Height <= _view.Map.Height);
+            return (obj.X >= 0) && (obj.X + obj.Width <= _view.MapWidth) &&
+                (obj.Y >= 0) && (obj.Y + obj.Height <= _view.MapHeight);
         }
 
         private void CreateBang(GameObject obj)
@@ -293,7 +305,7 @@ namespace Controller
                 if (ObjectCollision(player, apple))
                 {
                     delApples.Add(apple);
-                    Score++;
+                    _objects.Score++;
                 }
             });
 
@@ -303,67 +315,6 @@ namespace Controller
             delWalls.ForEach(wall => _objects.Walls.Remove(wall));
             delTanks.ForEach(tank => _objects.Tanks.Remove(tank));
             delApples.ForEach(apple => _objects.Apples.Remove(apple));
-        }
-
-        private void Draw(PictureBox pb, float dt)
-        {
-            Bitmap bm = new Bitmap(pb.Width, pb.Height);
-            Graphics g = Graphics.FromImage(bm);
-
-            // Закрышиваем
-            g.Clear(Color.Black);
-
-            // Рисуем преграды
-            _objects.Walls.ForEach(wall => wall.Draw(g));
-
-            // Рисуем воду
-            _objects.Water.ForEach(water => water.Draw(g));
-
-            // Рисуем пули
-            _objects.Bullets.ForEach(bullet => bullet.Draw(g));
-
-            // Рисуем противников
-            _objects.Tanks.ForEach(tank => tank.Draw(g, dt));
-
-            // Рисуем яблоки
-            _objects.Apples.ForEach(apple => apple.Draw(g, dt));
-
-            // Рисуем взрывы
-            _objects.Bangs.ForEach(bang => bang.Draw(g, dt));
-
-            // Рисуем подсказки
-            g.DrawString("Press P for show LOG\nPress R for Restart", new Font(FontFamily.GenericSansSerif, 14),
-                                new SolidBrush(Color.White), new PointF(5, 500));
-
-            if (isGame)
-            {
-                // Рисуем игрока
-                _objects.Player.Draw(g, dt);
-
-                // Рисуем очки
-                g.DrawImage(SpriteList.Image, new Rectangle(5, 8, 30, 30), new Rectangle(0, 170, 30, 30), GraphicsUnit.Pixel);
-
-                g.DrawString(Score.ToString(), new Font(FontFamily.GenericSansSerif, 22, FontStyle.Bold),
-                                new SolidBrush(Color.White), new PointF(35, 5));
-            }
-            else
-            {
-                g.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.Black)),
-                    new Rectangle(0, 0, pb.Width, pb.Height));
-                g.DrawString("Game Over", new Font(FontFamily.GenericSansSerif, 72, FontStyle.Bold),
-                                new SolidBrush(Color.LightGray), new PointF(40, 100));
-
-                g.DrawString($"Score: {Score}", new Font(FontFamily.GenericSansSerif, 32, FontStyle.Bold),
-                                new SolidBrush(Color.LightGray), new PointF(240, 220));
-
-                if (DateTime.Now.Millisecond < 500)
-                {
-                    g.DrawString("Try again", new Font(FontFamily.GenericSansSerif, 28, FontStyle.Bold),
-                                    new SolidBrush(Color.LightGray), new PointF(240, 310));
-                }
-            }
-
-            pb.Image = bm;
         }
 
         public GameController(IViewController view, IGameObjects objects)
@@ -393,12 +344,12 @@ namespace Controller
 
         public void StartGame()
         {
-            Score = 0;
             LoadLevel(1);
             _objects.Tanks = new List<TankView>();
             _objects.Bullets = new List<BulletView>();
             _objects.Apples = new List<AppleView>();
             _objects.Bangs = new List<BangView>();
+            _objects.Score = 0;
             timer = new Stopwatch();
             timer.Start();
             _view.ActiveTimer = true;

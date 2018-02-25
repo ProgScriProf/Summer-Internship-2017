@@ -55,7 +55,7 @@ namespace Model
             _end = false;
         }
 
-        public void Draw(Graphics g, int x, int y, float dx = 0)
+        public void SetSprite(float dx)
         {
             _index += dx * _speed;
             if (_index > _count)
@@ -70,7 +70,10 @@ namespace Model
                     _index -= _count;
                 }
             }
+        }
 
+        public void Draw(Graphics g, int x, int y)
+        {
             g.DrawImage(_img, new Rectangle(x, y, _w, _h), new Rectangle(_x + (int)_index * _w, _y, _w, _h), GraphicsUnit.Pixel);      
         }
 

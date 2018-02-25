@@ -18,10 +18,15 @@ namespace Model.ViewObjects
             _sprite = new SpriteList(120, 0, width, height, 15, 2);
         }
 
-        public void Draw(Graphics g, float dx)
+        public void SetSprite(float dx)
+        {
+            _sprite.SetSprite(dx);
+        }
+
+        public void Draw(Graphics g)
         {
             _sprite.SetPosition(120, Direction * Height);
-            _sprite.Draw(g, X, Y, dx);
+            _sprite.Draw(g, X, Y);
         }
 
     }

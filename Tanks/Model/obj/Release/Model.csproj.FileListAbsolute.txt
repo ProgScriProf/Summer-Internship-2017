@@ -1,0 +1,7 @@
+C:\Git\Summer-Internship-2017\Tanks\Model\bin\Release\Model.dll
+C:\Git\Summer-Internship-2017\Tanks\Model\bin\Release\Model.pdb
+C:\Git\Summer-Internship-2017\Tanks\Model\obj\Release\Model.LogForm.resources
+C:\Git\Summer-Internship-2017\Tanks\Model\obj\Release\Model.csproj.GenerateResource.Cache
+C:\Git\Summer-Internship-2017\Tanks\Model\obj\Release\Model.csproj.CoreCompileInputs.cache
+C:\Git\Summer-Internship-2017\Tanks\Model\obj\Release\Model.dll
+C:\Git\Summer-Internship-2017\Tanks\Model\obj\Release\Model.pdb

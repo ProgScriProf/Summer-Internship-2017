@@ -17,11 +17,13 @@ namespace Tanks
         [STAThread]
         static void Main()
         {
-            // Форма игры - вьюха
-            MainForm form = new MainForm(); // IViewController
 
             // Объекты игры (в List) - модель
             IGameObjects objects = new ListGameObjects();
+
+
+            // Форма игры - вьюха
+            MainForm form = new MainForm(objects); // IViewController         
             
             // Контроллер
             IGameController gameController = new GameController(form, objects);

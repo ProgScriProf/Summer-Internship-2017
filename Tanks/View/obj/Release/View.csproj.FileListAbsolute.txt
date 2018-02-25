@@ -1,0 +1,12 @@
+C:\Git\Summer-Internship-2017\Tanks\View\bin\Release\View.dll
+C:\Git\Summer-Internship-2017\Tanks\View\bin\Release\View.pdb
+C:\Git\Summer-Internship-2017\Tanks\View\bin\Release\Controller.dll
+C:\Git\Summer-Internship-2017\Tanks\View\bin\Release\Model.dll
+C:\Git\Summer-Internship-2017\Tanks\View\bin\Release\Controller.pdb
+C:\Git\Summer-Internship-2017\Tanks\View\bin\Release\Model.pdb
+C:\Git\Summer-Internship-2017\Tanks\View\obj\Release\View.csprojResolveAssemblyReference.cache
+C:\Git\Summer-Internship-2017\Tanks\View\obj\Release\View.MainForm.resources
+C:\Git\Summer-Internship-2017\Tanks\View\obj\Release\View.csproj.GenerateResource.Cache
+C:\Git\Summer-Internship-2017\Tanks\View\obj\Release\View.csproj.CoreCompileInputs.cache
+C:\Git\Summer-Internship-2017\Tanks\View\obj\Release\View.dll
+C:\Git\Summer-Internship-2017\Tanks\View\obj\Release\View.pdb
