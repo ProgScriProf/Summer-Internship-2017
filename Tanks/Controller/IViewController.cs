@@ -17,8 +17,5 @@ namespace Controller
         bool ActiveTimer { get; set; }
         int MapWidth { get; }
         int MapHeight { get; }
-
-        // Graphics Map { get; }
-        //PictureBox Map { get; }
     }
 }
