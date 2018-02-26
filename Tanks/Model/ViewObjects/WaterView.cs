@@ -10,11 +10,11 @@ namespace Model.ViewObjects
 {
     public class WaterView : Water
     {
-        protected SpriteList _sprite;
+        protected Sprite _sprite;
 
         public WaterView(float x, float y, int w, int h, int index) : base(x, y, w, h)
         {
-            _sprite = new SpriteList(100 + index * w, 120, w, h);
+            _sprite = new Sprite(100 + index * w, 120, w, h);
         }
 
         public void Draw(Graphics g)

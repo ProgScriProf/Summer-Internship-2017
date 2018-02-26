@@ -5,3 +5,4 @@ C:\Git\Summer-Internship-2017\Tanks\Model\obj\Release\Model.csproj.GenerateResou
 C:\Git\Summer-Internship-2017\Tanks\Model\obj\Release\Model.csproj.CoreCompileInputs.cache
 C:\Git\Summer-Internship-2017\Tanks\Model\obj\Release\Model.dll
 C:\Git\Summer-Internship-2017\Tanks\Model\obj\Release\Model.pdb
+C:\Git\Summer-Internship-2017\Tanks\Model\obj\Release\Model.csprojResolveAssemblyReference.cache

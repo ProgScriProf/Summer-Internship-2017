@@ -10,11 +10,11 @@ namespace Model.ViewObjects
 {
     public class BangView : Bang
     {
-        protected SpriteList _sprite;
+        protected SpriteListOne _sprite;
 
         public BangView(float x, float y, int w, int h) : base(x, y, w, h)
         {
-            _sprite = new SpriteList(0, 200, w, h, 10, 5, true);
+            _sprite = new SpriteListOne(0, 200, w, h, 10, 5);
         }
 
         public void SetSprite(float dx)

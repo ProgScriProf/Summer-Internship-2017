@@ -10,17 +10,17 @@ namespace Model.ViewObjects
 {
     public class WallView : Wall
     {
-        protected SpriteList _sprite;
+        protected Sprite _sprite;
 
         public WallView(int x, int y, int width, int height, bool destroyable = false) :  base(x, y, width, height, destroyable)
         {
             if (!destroyable)
             {
-                _sprite = new SpriteList(50, 120, width, height);
+                _sprite = new Sprite(50, 120, width, height);
             }
             else
             {
-                _sprite = new SpriteList(0, 120, width, height);
+                _sprite = new Sprite(0, 120, width, height);
             }
         }
 

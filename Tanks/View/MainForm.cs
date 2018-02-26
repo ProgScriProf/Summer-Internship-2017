@@ -83,7 +83,7 @@ namespace View
                 _objects.Player.Draw(g);
 
                 // Рисуем очки
-                g.DrawImage(SpriteList.Image, new Rectangle(5, 8, 30, 30), new Rectangle(0, 170, 30, 30), GraphicsUnit.Pixel);
+                g.DrawImage(Sprite.Image, new Rectangle(5, 8, 30, 30), new Rectangle(0, 170, 30, 30), GraphicsUnit.Pixel);
 
                 g.DrawString(_objects.Score.ToString(), new Font(FontFamily.GenericSansSerif, 22, FontStyle.Bold),
                                 new SolidBrush(Color.White), new PointF(35, 5));

@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="GameController.cs" />
     <Compile Include="IGameController.cs" />
+    <Compile Include="IViewController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
